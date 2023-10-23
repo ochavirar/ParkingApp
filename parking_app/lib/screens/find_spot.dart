@@ -1,6 +1,5 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
+import 'package:parking_app/screens/booking.dart';
 
 class FindSpot extends StatefulWidget {
   const FindSpot({Key? key});
@@ -12,29 +11,27 @@ class FindSpot extends StatefulWidget {
 class Slot {
   final String slot;
   final int floor;
-  final int _id;
+  final int id;
 
-  Slot(this.floor, this.slot, this._id);
+  Slot(this.floor, this.slot, this.id);
 }
 
 class _FindSpotState extends State<FindSpot> {
-  int selectedFloor = 1; // Variable para rastrear el piso seleccionado
-  final List<int> availableFloors = [1, 2, 3]; // Lista de todos los pisos disponibles
+  int selectedFloor = 1;
+  final List<int> availableFloors = [1, 2, 3];
+  List<Slot> slots = [
+    Slot(1, 'A0', 1),
+    Slot(2, 'A1', 2),
+    Slot(2, 'A2', 3),
+    Slot(1, 'A3', 4),
+    Slot(3, 'A4', 5),
+  ];
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final buttonWidth = screenWidth * 0.9;
-    List<Slot> slots = [
-      Slot(1, 'A0',1),
-      Slot(2, 'A1',2),
-      Slot(2, 'A2',3),
-      Slot(1, 'A3',4),
-      Slot(3, 'A4',5),
-    ];
-
-    List<Slot> filteredSlots =
-        slots.where((slot) => slot.floor == selectedFloor).toList();
+    List<Slot> filteredSlots = slots.where((slot) => slot.floor == selectedFloor).toList();
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -90,14 +87,13 @@ class _FindSpotState extends State<FindSpot> {
                   ],
                 ),
               ),
-
               SizedBox(height: 40),
               Container(
-                width: buttonWidth, // Ancho personalizado
+                width: buttonWidth,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(30), // Orillas redondeadas
-                  border: Border.all(color: const Color.fromARGB(110, 0, 0, 0)), // Borde negro
+                  borderRadius: BorderRadius.circular(30),
+                  border: Border.all(color: const Color.fromARGB(110, 0, 0, 0)),
                 ),
                 child: DropdownButtonFormField<int>(
                   value: selectedFloor,
@@ -107,13 +103,13 @@ class _FindSpotState extends State<FindSpot> {
                     });
                   },
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.all(10), 
-                    prefixIcon: Icon(Icons.search,color: Colors.black,), 
-                    labelText: 'Select your floor', 
+                    contentPadding: EdgeInsets.all(10),
+                    prefixIcon: Icon(Icons.search, color: Colors.black),
+                    labelText: 'Select your floor',
                     labelStyle: TextStyle(
                       color: const Color.fromARGB(255, 0, 0, 0),
                     ),
-                    border: InputBorder.none, // Sin borde adicional
+                    border: InputBorder.none,
                   ),
                   items: availableFloors
                       .map((floor) => DropdownMenuItem<int>(
@@ -128,11 +124,16 @@ class _FindSpotState extends State<FindSpot> {
                   scrollDirection: Axis.horizontal,
                   itemCount: filteredSlots.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return Row(
-                      children: [
-                        SizedBox(width: 30),
-                        SlotDisplay(filteredSlots[index]),
-                      ],
+                    return GestureDetector(
+                      onTap: () {
+                        _navigateToSlotPage(context, filteredSlots[index]);
+                      },
+                      child: Row(
+                        children: [
+                          SizedBox(width: 30),
+                          SlotDisplay(filteredSlots[index]),
+                        ],
+                      ),
                     );
                   },
                 ),
@@ -141,6 +142,14 @@ class _FindSpotState extends State<FindSpot> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _navigateToSlotPage(BuildContext context, Slot slot) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => SlotPage(slot: slot),
       ),
     );
   }
@@ -157,7 +166,7 @@ class SlotDisplay extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Image.asset(
-          'images/car_slot.png', // Ruta de la imagen que desees mostrar
+          'images/car_slot.png',
           width: 110,
           height: 80,
         ),
@@ -173,3 +182,4 @@ class SlotDisplay extends StatelessWidget {
     );
   }
 }
+

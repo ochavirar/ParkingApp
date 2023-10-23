@@ -149,7 +149,7 @@ class _FindSpotState extends State<FindSpot> {
   void _navigateToSlotPage(BuildContext context, Slot slot) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => SlotPage(slot: slot),
+        builder: (context) => SlotBooking(slot: slot),
       ),
     );
   }

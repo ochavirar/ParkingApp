@@ -1,22 +1,19 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
+import 'package:parking_app/screens/home_page.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(
+  MaterialApp(
+    debugShowCheckedModeBanner: false,
+    title: 'ParkingApp',
+    theme: ThemeData(
+      appBarTheme: AppBarTheme(
+        color:Color.fromARGB(255, 47, 125, 121),
+      ), 
+    ),
+    home: HomePage(),
+  ),
+);
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Material App',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Material App Bar'),
-        ),
-        body: const Center(
-          child: Text('Hello World'),
-        ),
-      ),
-    );
-  }
-}
+ 

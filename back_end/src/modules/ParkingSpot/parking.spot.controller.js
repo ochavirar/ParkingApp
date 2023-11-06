@@ -1,5 +1,5 @@
 const ParkingSpot = require('./parking.spot.schema');
-
+const Mall = require('../Mall/mall.schema');
 const mqtt = require('../mqtt.handler');
 
 const mqttClient = new mqtt();
@@ -11,6 +11,7 @@ mqttClient.client.subscribe('ParkingSpotUpdate');
 const ParkingSpotController = {
     listParkingSpots: function(req, res) {
         ParkingSpot.find({}).
+        populate('mall').
         then(reponse => {
             res.status(200).send(reponse);
         }).catch(err => {
@@ -19,6 +20,7 @@ const ParkingSpotController = {
     },
     listParkingSpotByID: function(req, res) {
         ParkingSpot.findById(req.params.id).
+        populate('mall').
         then(reponse => {
             res.status(200).send(reponse);
         }).catch(err => {
@@ -27,7 +29,7 @@ const ParkingSpotController = {
     },
     uploadParkingSpot: function(req, res) {
         const newParkingSpot = new ParkingSpot({
-            //mall: ,
+            mall: req.body.mall,
             floor: req.body.floor,
             row: req.body.row,
             number: req.body.number,
@@ -45,36 +47,39 @@ const ParkingSpotController = {
             res.status(500).send(err);
         })
     }, 
-    updateParkingSpotOccupation: function(req, res) {
-        ParkingSpot.findOneAndUpdate(
+    updateParkingSpotOccupation: function(parkingSpot, req, res) {
+        ParkingSpot.findOne(
         {
-            floor: req.body.floor,
-            row: req.body.row,
-            number: req.body.number
-        },
-        req.params.id, req.body)
+            floor: parkingSpot.floor,
+            row: parkingSpot.row,
+            number: parkingSpot.number
+        })
         .then(reponse => {
+            console.log(reponse);
             const occupied = reponse.occupied;
-            const updatedSpot = reponse.body;
             if(occupied){
-
+                console.log("Parking spot is occupied");
+            } else {
+                console.log("Parking spot is not occupied");
             }
-            res.status(200).send(reponse);
         })
         .catch(err => {
-            res.status(500).send(err);
+            console.log("The parking spot does not existt or you cannot connect to the database");
         });
     }
 }
 
 mqttClient.client.on('message', (topic, message) => {
     splitMessage = message.toString().split(',');
-    const parkingSpot = new Mall({
+    console.log(splitMessage);
+    const parkingSpot = {
         floor: Number(splitMessage[0]),
         row: Number(splitMessage[1]),
-        number: Number(splitMessage[2]),        
-    });
-    ParkingSpotController.uploadParkingSpot(parkingSpot);
+        number: Number(splitMessage[2]), 
+    };
+    console.log(parkingSpot);
+    ParkingSpotController.updateParkingSpotOccupation(parkingSpot);
 });
+
 module.exports = ParkingSpotController;
     

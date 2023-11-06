@@ -2,6 +2,7 @@ const {Schema, model} = require('mongoose');
 const Mall = require('../Mall/mall.schema');
 
 const parkingSpotSchema = new Schema({
+    mall: {type: Schema.ObjectId, ref: 'Mall', required: true},
     floor: {type: Number, required: true},
     row: {type: Number, required: true},
     number: {type: Number, required: true},

@@ -3,7 +3,7 @@ const env = require('dotenv').config();
 const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const mqtt = require('./src/modules/Mall/mall.mqtt.creator');
+const mqtt = require('./src/modules/mqtt.handler');
 const routes = require('./src/utils/router');
 
 const app = express();

@@ -1,4 +1,3 @@
-const mqtt = require('../Mall/mall.mqtt.creator');
 const {Schema, model} = require('mongoose');
 
 const mallSchema = new Schema({

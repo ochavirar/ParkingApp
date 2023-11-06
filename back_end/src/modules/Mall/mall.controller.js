@@ -1,5 +1,5 @@
 const Mall = require('./mall.schema');
-const mqtt = require('./mall.mqtt.creator');
+const mqtt = require('../mqtt.handler');
 
 const mqttClient = new mqtt();
 

@@ -58,9 +58,11 @@ const ParkingSpotController = {
             console.log(reponse);
             const occupied = reponse.occupied;
             if(occupied){
-                console.log("Parking spot is occupied");
+                //Marcar el lugar como libre y cambiar la fecha de fin a la actual
+                //Calcular el costo a una tarifa del centro comercial
+                //Se tiene que subir a la colección de transacciones
             } else {
-                console.log("Parking spot is not occupied");
+                // Marcar el lugar como ocupado y cambiar la fecha de inicio a la actual
             }
         })
         .catch(err => {

@@ -49,7 +49,7 @@ const ParkingSpotController = {
     }, 
     updateParkingSpotOccupation: function(parkingSpot, req, res) {
         console.log(parkingSpot);
-        ParkingSpot.findOne({
+        ParkingSpot.findOne({ // Finds and the updates
             floor: parkingSpot.floor,
             row: parkingSpot.row,
             number: parkingSpot.number

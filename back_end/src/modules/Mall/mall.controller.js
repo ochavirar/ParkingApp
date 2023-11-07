@@ -1,11 +1,11 @@
 const Mall = require('./mall.schema');
-const mqtt = require('./mall.mqtt.creator');
+const mqtt = require('../mqtt.handler');
 
 const mqttClient = new mqtt();
 
 mqttClient.connect();
 
-mqttClient.client.subscribe('Punto_Sur');
+mqttClient.client.subscribe('Mall_Upload');
 
 const MallController = {
     listMalls: function(req, res) {
@@ -25,18 +25,18 @@ const MallController = {
         })
     },
     createMall: function(req, res) {
-        console.log("Req:", req);
+        console.log("Req:", req.body);
         const newMall = new Mall({
-            name: req.name,
-            parkingLot: req.parkingLot,
-            visitors: req.visitors
+            name: req.name
         });
         console.log("Obj:", newMall);
         newMall.save().
         then(reponse => {
             console.log(reponse);
+            res.status(200).send(reponse);
         }).catch(err => {
             console.log(err);
+            res.status(500).send(err);
         })
     },
     updateMall: function(req, res) {
@@ -58,12 +58,7 @@ const MallController = {
 };
 
 mqttClient.client.on('message', (topic, message) => {
-    splitMessage = message.toString().split(',');
-    const mall = new Mall({
-        name: splitMessage[0],
-        parkingLot: splitMessage[1],
-        visitors: splitMessage[2]
-    });
+    const mall = message.toString();
     MallController.createMall(mall);
 });
 

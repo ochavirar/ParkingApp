@@ -9,7 +9,8 @@ const parkingSpotSchema = new Schema({
     occupied: {type: Boolean, required: true},
     startTime: {type: Date, required: true},
     endTime: {type: Date, required: true},
-    cost: {type: Number, required: true}
+    cost: {type: Number, required: true},
+    reserved: {type: Boolean, required: true},
 });
 
 module.exports = model('ParkingSpot', parkingSpotSchema);

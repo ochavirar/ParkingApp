@@ -101,6 +101,15 @@ const ParkingSpotController = {
             console.log(err);
             res.status(500).send(err);
         })
+    },
+    getFreeParkingSpots: function(req, res) {
+        ParkingSpot.find({occupied: false}).
+        populate('mall').
+        then(reponse => {
+            res.status(200).send(reponse);
+        }).catch(err => {
+            res.status(500).send(err);
+        })
     }
 }
 

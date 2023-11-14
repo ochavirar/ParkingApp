@@ -7,7 +7,7 @@ const mqttClient = new mqtt();
 
 mqttClient.connect();
 
-mqttClient.client.subscribe('ParkingSpotUpdate');
+mqttClient.client.subscribe('ParkingSpotUpdatee');
 
 const ParkingSpotController = {
     listParkingSpots: function(req, res) {
@@ -93,7 +93,8 @@ const ParkingSpotController = {
             row: req.body.row,
             number: req.body.number
         },{
-            reserved: req.body.reserved
+            reserved: true,
+            occupied: true,
         }).then(reponse => {
             console.log(reponse);
             res.status(200).send(reponse);

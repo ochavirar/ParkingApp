@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:parking_app/screens/find_spot.dart';
 import 'package:parking_app/screens/home_page.dart';
-import 'package:parking_app/classes/slot.dart';
 
 class SlotBooking extends StatelessWidget {
   String formattedDate = "";
@@ -132,14 +131,15 @@ class SlotBooking extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
+                        //TODO: add API call to check out and create a new cost in the database
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => FindSpot()),
+                          MaterialPageRoute(builder: (context) => HomePage()),
                         );
                       },
                       child: Text(
-                        'Change spot',
-                        style: TextStyle(fontFamily: 'Lexend', fontSize: 20, color: Color.fromARGB(255, 109, 49, 237)),
+                        'Check out',
+                        style: TextStyle(fontFamily: 'Lexend', fontSize: 20, color: Colors.redAccent),
                       ),
                     ),
                     SizedBox(height: 80),

@@ -72,6 +72,34 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    print("Button pressed");
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => FindSpot()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    minimumSize: Size(buttonWidth, 50), // Tamaño del botón basado en el porcentaje
+                  ),
+                  child: Text(
+                    "See your parking history",
+                    style: TextStyle(
+                      fontFamily: 'Lexend',
+                      fontWeight: FontWeight.normal,
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

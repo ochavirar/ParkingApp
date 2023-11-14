@@ -5,20 +5,20 @@ import 'package:http/http.dart' as http;
 
 class LogInProvider with ChangeNotifier{
 
-  static const String _signUpLink = 'http://localhost:3000/user/';
+  static const String _signUpLink = 'http://127.0.0.1:3000/user/';
 
   String email = '';
   String password = '';
-  String logged_id = '';
+  String loggedInUserId = '';
 
-  get id => logged_id;
+  get id => loggedInUserId;
 
   Future<bool> logIn(BuildContext context, String email, String password) async {
     final response = await http.get(Uri.parse(_signUpLink + email));
     if(response.statusCode == 200){
       final responseData = json.decode(response.body) as Map<String, dynamic>;
       if(responseData['password'] == password){
-        logged_id = responseData['_id'];
+        loggedInUserId = responseData['_id'];
         return true;
       } else {
         return false;

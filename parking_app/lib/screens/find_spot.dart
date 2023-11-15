@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:parking_app/providers/log_in_provider.dart';
+import 'package:parking_app/providers/parking_spots_provider.dart';
 import 'package:parking_app/screens/booking.dart';
+import 'package:provider/provider.dart';
 
 
 class FindSpot extends StatefulWidget {
@@ -108,7 +111,14 @@ class _FindSpotState extends State<FindSpot> {
                           if ( filteredSlots[index]['floor'] != null &&
                            filteredSlots[index]['row'] != null && 
                           filteredSlots[index]['number'] != null){
-                            _navigateToSlotPage(context, filteredSlots[index]['floor'], filteredSlots[index]['row'], filteredSlots[index]['number']);
+                            Provider.of<ParkingSpotProvider>(context, listen: false).reserveParkingSpace(
+                              filteredSlots[index]['floor'], 
+                              filteredSlots[index]['row'], 
+                              filteredSlots[index]['number'], 
+                              Provider.of<LogInProvider>(context, listen: false).id
+                            ).then((value) {
+                              _navigateToSlotPage(context, filteredSlots[index]['floor'], filteredSlots[index]['row'], filteredSlots[index]['number']);
+                            });
                           }
                         },
                         child: Row(

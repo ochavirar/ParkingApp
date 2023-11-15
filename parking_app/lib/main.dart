@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:parking_app/providers/log_in_provider.dart';
 import 'package:parking_app/providers/parking_spots_provider.dart';
 import 'package:parking_app/providers/sign_up_provider.dart';
-import 'package:parking_app/screens/home_page.dart';
 import 'package:parking_app/screens/login_page.dart';
-import 'package:parking_app/screens/parking_history.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(

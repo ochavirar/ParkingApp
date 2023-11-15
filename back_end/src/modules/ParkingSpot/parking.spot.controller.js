@@ -8,6 +8,7 @@ const mqttClient = new mqtt();
 mqttClient.connect();
 
 mqttClient.client.subscribe('ParkingSpotUpdatee');
+mqttClient.client.subscribe('ParkingSpotReservation');
 
 const ParkingSpotController = {
     listParkingSpots: function(req, res) {
@@ -88,6 +89,7 @@ const ParkingSpotController = {
         });
     },
     updateParkingSpotReservation: function(req, res) {
+        console.log(req.body);
         ParkingSpot.findOneAndUpdate({
             floor: req.body.floor,
             row: req.body.row,
@@ -95,8 +97,35 @@ const ParkingSpotController = {
         },{
             reserved: true,
             occupied: true,
+            startTime: Date.now(),
         }).then(reponse => {
             console.log(reponse);
+            res.status(200).send(reponse);
+        }).catch(err => {
+            console.log(err);
+            res.status(500).send(err);
+        })
+    },
+    checkout: function(req, res){
+        ParkingSpot.findOneAndUpdate({
+            floor: req.body.floor,
+            row: req.body.row,
+            number: req.body.number
+        },{
+            occupied: false,
+            reserved: false,
+            endTime: Date.now()
+        }).then(reponse => {
+            console.log(reponse);
+            const cost = {
+                user: req.body.user,
+                hours: Number( (response.endTime - response.startTime) / 3600000 ),
+                totalPayed: Number(10 * ( (response.endTime - response.startTime) / 3600000 )),
+                start: response.startTime,
+                end: response.endTime,
+                parkingSpot: response._id
+            };
+            costController.createCost(cost);
             res.status(200).send(reponse);
         }).catch(err => {
             console.log(err);

@@ -14,7 +14,7 @@ const CostController = {
             });
     },
     createCost: function (data) {
-        console.log(data);
+        console.log("Cost data: " + data);
         const newCost = {
             user: (data.user != null) ? data.user : null,
             hours: data.hours,
@@ -29,6 +29,16 @@ const CostController = {
             })
             .catch(error => {
                 console.log(error);
+            });
+    },
+    getCostsByUser: function (req, res) {
+        Cost.find({ user: req.params.id })
+        .populate('parkingSpot')
+            .then(response => {
+                res.send(response);
+            })
+            .catch(error => {
+                res.send(error);
             });
     }
 };

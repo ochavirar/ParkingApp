@@ -27,4 +27,11 @@ class LogInProvider with ChangeNotifier{
       return false;
     }
   }
+
+  void logOut() {
+    loggedInUserId = '';
+    email = '';
+    password = '';
+    notifyListeners();
+  }
 }

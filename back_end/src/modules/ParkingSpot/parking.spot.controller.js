@@ -52,7 +52,7 @@ const ParkingSpotController = {
     }, 
     updateParkingSpotOccupation: function(parkingSpot, req, res) {
         console.log(parkingSpot);
-        ParkingSpot.findOne({ // Finds and the updates
+        ParkingSpot.findOne({ // Finds and then updates
             floor: parkingSpot.floor,
             row: parkingSpot.row,
             number: parkingSpot.number
@@ -99,6 +99,7 @@ const ParkingSpotController = {
             occupied: true,
             startTime: Date.now(),
         }).then(reponse => {
+            console.log("Updated parking spot for reservation:");
             console.log(reponse);
             res.status(200).send(reponse);
         }).catch(err => {
@@ -114,19 +115,28 @@ const ParkingSpotController = {
         },{
             occupied: false,
             reserved: false,
-            endTime: Date.now()
-        }).then(reponse => {
-            console.log(reponse);
-            const cost = {
-                user: req.body.user,
-                hours: Number( (response.endTime - response.startTime) / 3600000 ),
-                totalPayed: Number(10 * ( (response.endTime - response.startTime) / 3600000 )),
-                start: response.startTime,
-                end: response.endTime,
-                parkingSpot: response._id
-            };
-            costController.createCost(cost);
-            res.status(200).send(reponse);
+            endTime: Date.now(),
+        }).then(response => {
+            console.log("Updated parking spot for checkout:");
+            console.log(response);
+            ParkingSpot.findOne({
+                floor: req.body.floor,
+                row: req.body.row,
+                number: req.body.number
+            }).then(resp => {
+                const cost = {
+                    user: req.body.user,
+                    hours: Number( (resp.endTime - resp.startTime) / 3600000 ),
+                    totalPayed: Number(10 * ( (resp.endTime - resp.startTime) / 3600000 )),
+                    start: resp.startTime,
+                    end: resp.endTime,
+                    parkingSpot: resp._id
+                };
+                console.log("Cost object:");
+                console.log(cost);
+                costController.createCost(cost);
+            });
+            response.status(200).send(response);
         }).catch(err => {
             console.log(err);
             res.status(500).send(err);

@@ -10,7 +10,9 @@ import 'package:provider/provider.dart';
 class ParkingSpotProvider with ChangeNotifier{
   List<dynamic> parkingSpots = [];
   static const String _parkingSpotsLink = 'http://localhost:3000/parkingSpot/free';
-
+  int reservedFloor = 0; 
+  int reservedRow = 0;
+  int reservedNumber = 0;
   get freeParkingSpots => parkingSpots;
 
   Future <void> getFreeParkingSpaces() async {
@@ -37,9 +39,34 @@ class ParkingSpotProvider with ChangeNotifier{
 
     final response = await http.post(Uri.parse(url), body: jsonEncode(data), headers: {'Content-Type': 'application/json'});
     if (response.statusCode == 200) {
+      reservedFloor = floor;
+      reservedRow = row;
+      reservedNumber = number;
       notifyListeners();
     } else {
       throw Exception('Failed to change parking spot');
     }
   }  
+
+  Future<void> checkoutFromSpace(String userId) async {
+    const String url = 'http://localhost:3000/parkingSpot/exit';
+    final Map<String, dynamic> data = {
+      'user': userId,
+      'floor': reservedFloor,
+      'row': reservedRow,
+      'number': reservedNumber,
+    };
+    print(data);
+        
+
+    final response = await http.put(Uri.parse(url), body: jsonEncode(data), headers: {'Content-Type': 'application/json'});
+    if (response.statusCode == 200) {
+      reservedFloor = 0;
+      reservedRow = 0;
+      reservedNumber = 0;
+      notifyListeners();
+    } else {
+      throw Exception('Failed to change parking spot');
+    }
+  }
 }

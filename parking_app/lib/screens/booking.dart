@@ -1,8 +1,11 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:parking_app/providers/log_in_provider.dart';
+import 'package:parking_app/providers/parking_spots_provider.dart';
 import 'package:parking_app/screens/find_spot.dart';
 import 'package:parking_app/screens/home_page.dart';
+import 'package:provider/provider.dart';
 
 class SlotBooking extends StatelessWidget {
   String formattedDate = "";
@@ -131,11 +134,13 @@ class SlotBooking extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
-                        //TODO: add API call to check out and create a new cost in the database
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomePage()),
+                        Provider.of<ParkingSpotProvider>(context, listen: false).checkoutFromSpace(
+                          Provider.of<LogInProvider>(context, listen: false).loggedInUserId
                         );
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomePage()),
+                          );
                       },
                       child: Text(
                         'Check out',

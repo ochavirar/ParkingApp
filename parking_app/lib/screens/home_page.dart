@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:parking_app/screens/find_spot.dart';
+import 'package:parking_app/screens/parking_history.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key});
@@ -79,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                     print("Button pressed");
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => FindSpot()),
+                      MaterialPageRoute(builder: (context) => ParkingHistory()),
                     );
                   },
                   style: ElevatedButton.styleFrom(

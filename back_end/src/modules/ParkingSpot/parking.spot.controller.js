@@ -7,7 +7,8 @@ const mqttClient = new mqtt();
 
 mqttClient.connect();
 
-mqttClient.client.subscribe('ParkingSpotUpdate');
+mqttClient.client.subscribe('ParkingSpotUpdatee');
+mqttClient.client.subscribe('ParkingSpotReservation');
 
 const ParkingSpotController = {
     listParkingSpots: function(req, res) {
@@ -51,7 +52,7 @@ const ParkingSpotController = {
     }, 
     updateParkingSpotOccupation: function(parkingSpot, req, res) {
         console.log(parkingSpot);
-        ParkingSpot.findOne({ // Finds and the updates
+        ParkingSpot.findOne({ // Finds and then updates
             floor: parkingSpot.floor,
             row: parkingSpot.row,
             number: parkingSpot.number
@@ -88,17 +89,65 @@ const ParkingSpotController = {
         });
     },
     updateParkingSpotReservation: function(req, res) {
+        console.log(req.body);
         ParkingSpot.findOneAndUpdate({
             floor: req.body.floor,
             row: req.body.row,
             number: req.body.number
         },{
-            reserved: req.body.reserved
+            reserved: true,
+            occupied: true,
+            startTime: Date.now(),
         }).then(reponse => {
+            console.log("Updated parking spot for reservation:");
             console.log(reponse);
             res.status(200).send(reponse);
         }).catch(err => {
             console.log(err);
+            res.status(500).send(err);
+        })
+    },
+    checkout: function(req, res){
+        ParkingSpot.findOneAndUpdate({
+            floor: req.body.floor,
+            row: req.body.row,
+            number: req.body.number
+        },{
+            occupied: false,
+            reserved: false,
+            endTime: Date.now(),
+        }).then(response => {
+            console.log("Updated parking spot for checkout:");
+            console.log(response);
+            ParkingSpot.findOne({
+                floor: req.body.floor,
+                row: req.body.row,
+                number: req.body.number
+            }).then(resp => {
+                const cost = {
+                    user: req.body.user,
+                    hours: Number( (resp.endTime - resp.startTime) / 3600000 ),
+                    totalPayed: Number(10 * ( (resp.endTime - resp.startTime) / 3600000 )),
+                    start: resp.startTime,
+                    end: resp.endTime,
+                    parkingSpot: resp._id
+                };
+                console.log("Cost object:");
+                console.log(cost);
+                costController.createCost(cost);
+            });
+            response.status(200).send(response);
+        }).catch(err => {
+            console.log(err);
+            res.status(500).send(err);
+        })
+    },
+    getFreeParkingSpots: function(req, res) {
+        ParkingSpot.find({occupied: false}).
+        populate('mall').
+        then(reponse => {
+            res.status(200).send(reponse);
+        }).catch(err => {
             res.status(500).send(err);
         })
     }

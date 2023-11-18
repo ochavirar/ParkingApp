@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:parking_app/screens/find_spot.dart';
 import 'package:parking_app/screens/parking_history.dart';
+import 'package:parking_app/screens/login_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key});
@@ -26,7 +27,7 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "YouPark",
+                "Welcome Back!",
                 style: TextStyle(
                   fontFamily: 'Lexend',
                   fontWeight: FontWeight.bold,
@@ -92,6 +93,35 @@ class _HomePageState extends State<HomePage> {
                   ),
                   child: Text(
                     "See your parking history",
+                    style: TextStyle(
+                      fontFamily: 'Lexend',
+                      fontWeight: FontWeight.normal,
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () {     
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                      (route) => false, 
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Color.fromARGB(255, 109, 49, 237),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    minimumSize: Size(buttonWidth, 50),
+                  ),
+                  child: Text(
+                    "Logout",
                     style: TextStyle(
                       fontFamily: 'Lexend',
                       fontWeight: FontWeight.normal,

@@ -31,7 +31,7 @@ app.get("*", function (req, res) {
 
 // MongoDB connection
 mongoose
-    .connect(process.env.MONGO_URL)
+    .connect('mongodb+srv://ochavirarom:4HVUsfuPpz3iNLEJ@iothub.0stidjk.mongodb.net/')
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log(err));
 

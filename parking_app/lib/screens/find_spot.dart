@@ -6,7 +6,6 @@ import 'package:parking_app/providers/parking_spots_provider.dart';
 import 'package:parking_app/screens/booking.dart';
 import 'package:provider/provider.dart';
 
-
 class FindSpot extends StatefulWidget {
   const FindSpot({Key? key});
 
@@ -15,9 +14,8 @@ class FindSpot extends StatefulWidget {
 }
 
 class _FindSpotState extends State<FindSpot> {
-
   List<dynamic> filteredSlots = [];
-  
+
   @override
   void initState() {
     super.initState();
@@ -27,7 +25,7 @@ class _FindSpotState extends State<FindSpot> {
   Future<void> _getFreeParkingSpaces() async {
     const String parkingSpotsLink = 'http://localhost:3000/parkingSpot/free';
     final response = await http.get(Uri.parse(parkingSpotsLink));
-    print(response); 
+    print(response);
     if (response.statusCode == 200) {
       final List<dynamic> responseData = jsonDecode(response.body);
       setState(() {
@@ -41,106 +39,132 @@ class _FindSpotState extends State<FindSpot> {
     }
   }
 
-  @override   
+  @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final buttonWidth = screenWidth * 0.9;
 
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          backgroundColor: Colors.white,
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 40),
-                Container(
-                  width: buttonWidth,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 255, 86, 165),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Find your spot',
-                            style: TextStyle(
-                              fontFamily: 'Lexend',
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Text(
-                            'Find easy parking',
-                            style: TextStyle(
-                              fontFamily: 'Lexend',
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'images/phone.png',
-                            width: 200,
-                            height: 200,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 40),
-                Expanded(
-                  child: ListView.builder( // List builder for the spots obtained through the provider
-                    scrollDirection: Axis.horizontal,
-                    itemCount: filteredSlots.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return GestureDetector(
-                        onTap: () {
-                          if ( filteredSlots[index]['floor'] != null &&
-                           filteredSlots[index]['row'] != null && 
-                          filteredSlots[index]['number'] != null){
-                            Provider.of<ParkingSpotProvider>(context, listen: false).reserveParkingSpace(
-                              filteredSlots[index]['floor'], 
-                              filteredSlots[index]['row'], 
-                              filteredSlots[index]['number'], 
-                              Provider.of<LogInProvider>(context, listen: false).id
-                            ).then((value) {
-                              _navigateToSlotPage(context, filteredSlots[index]['floor'], filteredSlots[index]['row'], filteredSlots[index]['number']);
-                            });
-                          }
-                        },
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 30),
-                            SlotDisplay(
-                              (filteredSlots[index]['floor']) != null ? filteredSlots[index]['floor'] : 0, 
-                              (filteredSlots[index]['row']) != null ? filteredSlots[index]['row'] : 0, 
-                              (filteredSlots[index]['number']) != null ? filteredSlots[index]['number'] : 0, 
-                            ),
-                          ],
-                        ),
-                      );
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      Navigator.pop(context);
                     },
                   ),
                 ),
-                const SizedBox(height: 200)
-              ],
-            ),
+              ),
+              const SizedBox(height: 40),
+              Container(
+                width: buttonWidth,
+                height: 200,
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 255, 86, 165),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Find your spot',
+                          style: TextStyle(
+                            fontFamily: 'Lexend',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          'Find easy parking',
+                          style: TextStyle(
+                            fontFamily: 'Lexend',
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'images/phone.png',
+                          width: 200,
+                          height: 200,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 40),
+              Expanded(
+                child: Center(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    child: ListView.builder(
+                      // Changed from horizontal to vertical scroll
+                      scrollDirection: Axis.vertical,
+                      itemCount: filteredSlots.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return GestureDetector(
+                          onTap: () {
+                            if (filteredSlots[index]['floor'] != null &&
+                                filteredSlots[index]['row'] != null &&
+                                filteredSlots[index]['number'] != null) {
+                              Provider.of<ParkingSpotProvider>(context, listen: false)
+                                  .reserveParkingSpace(
+                                      filteredSlots[index]['floor'],
+                                      filteredSlots[index]['row'],
+                                      filteredSlots[index]['number'],
+                                      Provider.of<LogInProvider>(context, listen: false).id)
+                                  .then((value) {
+                                _navigateToSlotPage(
+                                    context, filteredSlots[index]['floor'], filteredSlots[index]['row'], filteredSlots[index]['number']);
+                              });
+                            }
+                          },
+                          child: Card(
+                            elevation: 5,
+                            margin: const EdgeInsets.all(10),
+                            child: Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SlotDisplay(
+                                    (filteredSlots[index]['floor']) != null ? filteredSlots[index]['floor'] : 0,
+                                    (filteredSlots[index]['row']) != null ? filteredSlots[index]['row'] : 0,
+                                    (filteredSlots[index]['number']) != null ? filteredSlots[index]['number'] : 0,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-      );
+      ),
+    );
   }
 
   void _navigateToSlotPage(BuildContext context, int floor_d, int line_d, int spot_d) {
@@ -169,7 +193,9 @@ class SlotDisplay extends StatelessWidget {
           width: 110,
           height: 80,
         ),
+        SizedBox(height: 20),
         Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               'Piso: ${floor}',
@@ -202,7 +228,8 @@ class SlotDisplay extends StatelessWidget {
                 fontSize: 16,
                 color: Colors.green,
               ),
-            ),],
+            ),
+          ],
         )
       ],
     );

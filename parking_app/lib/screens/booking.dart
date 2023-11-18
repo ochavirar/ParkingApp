@@ -115,7 +115,10 @@ class SlotBooking extends StatelessWidget {
                       margin: EdgeInsets.all(16),
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.push(
+                          Provider.of<ParkingSpotProvider>(context, listen: false).checkoutFromSpace(
+                          Provider.of<LogInProvider>(context, listen: false).loggedInUserId
+                        );
+                        Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => HomePage()),
                           );
@@ -127,24 +130,9 @@ class SlotBooking extends StatelessWidget {
                           ),
                         ),
                         child: Text(
-                          'Home',
+                          'Check Out',
                           style: TextStyle(fontFamily: 'Lexend', fontSize: 20, fontWeight: FontWeight.bold),
                         ),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Provider.of<ParkingSpotProvider>(context, listen: false).checkoutFromSpace(
-                          Provider.of<LogInProvider>(context, listen: false).loggedInUserId
-                        );
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => HomePage()),
-                          );
-                      },
-                      child: Text(
-                        'Check out',
-                        style: TextStyle(fontFamily: 'Lexend', fontSize: 20, color: Colors.redAccent),
                       ),
                     ),
                     SizedBox(height: 80),
